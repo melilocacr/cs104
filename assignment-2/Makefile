@@ -6,12 +6,19 @@ CPP       = g++ -g -O0 -Wall -Wextra -std=gnu++14
 MKDEPS    = g++ -MM -std=gnu++14
 GRIND	  = valgrind --leak-check=full --show-reachable=yes
 DEPSFILE  = Makefile.deps
+BISON     = bison --defines=${PARSEHDR} --output=${PARSECPP} --xml
+XML2HTML  = xsltproc /usr/share/bison/xslt/xml2xhtml.xsl
+
 CPPSRC    = main.cpp auxlib.cpp string_set.cpp cppstrtok.cpp
+BISONSRC  = parser.y
+PARSEHDR  = yyparse.h
+PARSECPP  = yyparse.cpp
+CGENS     = ${PARSECPP}
 HEADSRC   = auxlib.h string_set.h cppstrtok.h 
 ALLGENS   = ${PARSEHDR} ${CGENS}
 REPORTS   = ${LEXOUT} ${PARSEOUT}
 TESTINS   = ${wildcard test*.in}
-ALLCSRC   = ${CPPSRC} 
+ALLCSRC   = ${CPPSRC} ${CGENS}
 SUBSRC    = README Makefile ${CPPSRC} ${HEADSRC}
 
 USER       = melilocacr
@@ -27,6 +34,10 @@ ${EXECBIN} : ${OBJECTS}
 
 %.o : %.cpp
 	${CPP} -c $<
+
+${PARSECPP} ${PARSEHDR} : ${BISONSRC}
+	${BISON} ${BISONSRC}
+	${XML2HTML} yyparse.xml >yyparse.html
 
 ci :
 	- git add -A
