@@ -78,7 +78,7 @@ const char* scan_opts (int argc, char** argv) {
 }
 
 int main(int argc, char ** argv) {
-  const char* execname = basename (argv[0]);
+  exec::execname = basename (argv[0]);
   if (yydebug or yy_flex_debug) {
     fprintf (stderr, "Command:");
     for (char** arg = &argv[0]; arg < &argv[argc]; ++arg) {
@@ -93,7 +93,7 @@ int main(int argc, char ** argv) {
   // file checks
   FILE *ocSource = fopen(filename, "r");
   if (!ocSource) {
-    fprintf (stderr, "%s: %s\n", execname, strerror (errno));
+    fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
     exit(EXIT_FAILURE);
   }
 
@@ -110,7 +110,7 @@ int main(int argc, char ** argv) {
   char* strFile = strcat(filename, ".str");
   FILE* strFileStream = fopen(strFile, "w");
   if (!strFileStream) {
-    fprintf (stderr, "%s: %s\n", execname, strerror (errno));
+    fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
   }
 
   // tok file Stream
@@ -118,13 +118,11 @@ int main(int argc, char ** argv) {
   char* tokFileName = strcat(filename, ".tok");
   FILE* tokFileStream = fopen(tokFileName, "w");
   if (!tokFileStream) {
-    fprintf (stderr, "%s: %s\n", execname, strerror (errno));
+    fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
   }
 
   lexSet.outFile(tokFileStream);
-  while (yylex() != YYEOF) {
-    strSet.intern(yytext);   
-  };
+  yyparse();
 
   // dump stringset
   strSet.dump(strFileStream); 
