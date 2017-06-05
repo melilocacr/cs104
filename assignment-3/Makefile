@@ -1,7 +1,7 @@
-# $Id: Makefile,v 1.23 2016-10-12 16:59:53-07 - - $
+	# $Id: Makefile,v 1.23 2016-10-12 16:59:53-07 - - $
 
 EXECBIN   = oc
-OBJECTS   = ${ALLCSRC:.cpp=.o}
+OBJECTS   = ${ALLCSRC:.cpp=.o} 
 CPP       = g++ -g -O0 -Wall -Wextra -std=gnu++14
 MKDEPS    = g++ -MM -std=gnu++14
 GRIND	  = valgrind --leak-check=full --show-reachable=yes
@@ -52,14 +52,15 @@ ${PARSECPP} ${PARSEHDR} : ${BISONSRC}
 
 ci :
 	- git add -A
-	- git commit -am
+	- git commit -m
 	- git push --all ${HTTPS}${GITHUB}${REPO}
 
 clean :
 	- rm ${OBJECTS} ${REPORTS} ${DEPSFILE}
 	- rm ${foreach test, ${TESTINS:.in=}, \
 		${patsubst %, ${test}.%, out err log}}
-	- rm *.out *.err *.log *.oc *.str *.tok
+	- rm *.out *.err *.log *.oc *.str *.tok *.ast oc
+	- rm yyparse.html yyparse.output yyparse.xml
 
 spotless : clean
 	- rm ${EXECBIN} List.*.ps List.*.pdf

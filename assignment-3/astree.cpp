@@ -37,6 +37,13 @@ astree* astree::adopt (astree* child1, astree* child2) {
    return this;
 }
 
+astree* astree::adopt3 (astree* child1, astree* child2, astree* child3) {
+   if (child1 != nullptr) children.push_back (child1);
+   if (child2 != nullptr) children.push_back (child2);
+   if (child3 != nullptr) children.push_back (child3);
+   return this;
+}
+
 astree* astree::adopt_sym (astree* child, int symbol_) {
    symbol = symbol_;
    return adopt (child);
@@ -74,6 +81,20 @@ void astree::print (FILE* outfile, astree* tree, int depth) {
    for (astree* child : tree->children) {
       astree::print (outfile, child, depth + 1);
    }
+}
+
+astree* new_function(int tokenproto, int tokenfunc, astree* identdecl, astree* paramlist, astree* block) {
+   astree* new_func;
+   if(!string(";").compare(*block->lexinfo)) { // this is a function prototype
+      new_func = new astree(tokenproto, identdecl->lloc, ""); 
+      new_func->adopt3(identdecl, paramlist, block);
+   }
+   else {
+      new_func = new astree(tokenfunc, identdecl->lloc, "");
+      new_func->adopt3(identdecl, paramlist, block);
+   }
+
+   return new_func;
 }
 
 void destroy (astree* tree1, astree* tree2) {

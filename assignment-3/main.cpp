@@ -120,15 +120,28 @@ int main(int argc, char ** argv) {
   if (!tokFileStream) {
     fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
   }
-
   lexSet.outFile(tokFileStream);
+
+  // ast file Stream
+  *extPtr = 0;
+  char* astFileName = strcat(filename, ".ast");
+  FILE* astFileStream = fopen(astFileName, "w");
+  if (!astFileStream) {
+    fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
+  }
+
   yyparse();
+
 
   // dump stringset
   strSet.dump(strFileStream); 
+
+  // dump ast
+  
   cpp_pclose();
   fclose(tokFileStream);
   fclose(strFileStream);
+  fclose(astFileStream);
 
   yylex_destroy();
 

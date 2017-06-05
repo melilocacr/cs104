@@ -16,6 +16,7 @@ using namespace std;
 
 #define YYEOF 0
 
+extern astree* yyparse_astree;
 extern FILE* yyin;
 extern char* yytext;
 extern int yy_flex_debug;
