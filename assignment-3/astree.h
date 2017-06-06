@@ -27,15 +27,18 @@ struct astree {
    astree (int symbol, const location&, const char* lexinfo);
    ~astree();
    astree* adopt (astree* child1, astree* child2 = nullptr);
-   astree* adopt3 (astree* child1, astree* child2 = nullptr, astree* child3 = nullptr);
+   astree* adopt3 (astree* child1, astree* child2 = nullptr, 
+      astree* child3 = nullptr);
    astree* adopt_sym (astree* child, int symbol);
    void dump_node (FILE*);
    void dump_tree (FILE*, int depth = 0);
    static void dump (FILE* outfile, astree* tree);
-   static void print (FILE* outfile, astree* tree, int depth = 0);
 };
 
-astree* new_function(int tokenproto, int tokenfunc, astree* identdecl, astree* paramlist, astree* block);
+astree* new_function (int tp, int tf, astree* identdecl, 
+   astree* paramlist, astree* block);
+
+void print_ast (FILE* outfile, astree* tree, int depth = 0);
 
 void destroy (astree* tree1, astree* tree2 = nullptr);
 

@@ -37,7 +37,8 @@ astree* astree::adopt (astree* child1, astree* child2) {
    return this;
 }
 
-astree* astree::adopt3 (astree* child1, astree* child2, astree* child3) {
+astree* astree::adopt3 (astree* child1,
+   astree* child2, astree* child3) {
    if (child1 != nullptr) children.push_back (child1);
    if (child2 != nullptr) children.push_back (child2);
    if (child3 != nullptr) children.push_back (child3);
@@ -52,7 +53,7 @@ astree* astree::adopt_sym (astree* child, int symbol_) {
 
 void astree::dump_node (FILE* outfile) {
    fprintf (outfile, "%p->{%s %zd.%zd.%zd \"%s\":",
-            this, parser::get_tname (symbol),
+            this, get_tname (symbol),
             lloc.filenr, lloc.linenr, lloc.offset,
             lexinfo->c_str());
    for (size_t child = 0; child < children.size(); ++child) {
@@ -73,24 +74,37 @@ void astree::dump (FILE* outfile, astree* tree) {
    else tree->dump_node (outfile);
 }
 
-void astree::print (FILE* outfile, astree* tree, int depth) {
-   fprintf (outfile, "; %*s", depth * 3, "");
+void print_ast (FILE* outfile, astree* tree, int depth) {
+   string indent = "";
+
+   for(int i = 0; i < depth; i++) {
+      indent += "|   ";
+   }
+
+   fprintf (outfile, "%s", indent.c_str());
+
+   char* tname = (char*) get_tname(tree->symbol);
+   if (strstr(tname, "TOK_") == tname) {
+      tname += 4;
+   }
+   
    fprintf (outfile, "%s \"%s\" (%zd.%zd.%zd)\n",
-            parser::get_tname (tree->symbol), tree->lexinfo->c_str(),
+            tname, tree->lexinfo->c_str(),
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
    for (astree* child : tree->children) {
-      astree::print (outfile, child, depth + 1);
+      print_ast (outfile, child, depth + 1);
    }
 }
 
-astree* new_function(int tokenproto, int tokenfunc, astree* identdecl, astree* paramlist, astree* block) {
-   astree* new_func;
-   if(!string(";").compare(*block->lexinfo)) { // this is a function prototype
-      new_func = new astree(tokenproto, identdecl->lloc, ""); 
+astree* new_function
+   (int tp, int tf, astree* identdecl, astree* paramlist, astree* block)
+   { astree* new_func;
+   if(!string(";").compare(*block->lexinfo)) { 
+      new_func = new astree(tp, identdecl->lloc, ""); 
       new_func->adopt3(identdecl, paramlist, block);
    }
    else {
-      new_func = new astree(tokenfunc, identdecl->lloc, "");
+      new_func = new astree(tf, identdecl->lloc, "");
       new_func->adopt3(identdecl, paramlist, block);
    }
 

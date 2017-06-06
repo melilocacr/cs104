@@ -8,6 +8,7 @@ cp $OCDIR/*.oh $OCDIR/*.oc .
 
 for ocfile in *.oc nosuch.oc
 do
+   echo $ocfile
    $PROG $ocfile 1>$ocfile.out 2>$ocfile.err
 done
 

@@ -16,7 +16,7 @@ size_t lexer::last_yyleng = 0;
 vector<string> lexer::filenames;
 
 astree* parser::root = nullptr;
-astree* yyparse_astree = NULL;
+astree* yyparse_astree = nullptr;
 FILE *tokFile = NULL;
 string_set strSet;
 
@@ -89,8 +89,9 @@ void yyerror (const char* message) {
 int yylval_token (int symbol) {
    yylval = new astree (symbol, lexer::lloc, yytext);
    fprintf (tokFile, "%4ld %3ld.%03ld %4d %-13s (%s)\n",
-            yylval->lloc.filenr, yylval->lloc.linenr, yylval->lloc.offset,
-            symbol, parser::get_tname (symbol), yytext);
+            yylval->lloc.filenr, yylval->lloc.linenr, 
+            yylval->lloc.offset,
+            symbol, get_tname (symbol), yytext);
    strSet.intern(yytext);
    return symbol;
 }

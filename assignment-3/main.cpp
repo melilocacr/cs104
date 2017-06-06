@@ -14,9 +14,10 @@ using namespace std;
 #include <iostream>
 #include <unistd.h>
 
-#include "astree.h"
+
 #include "auxlib.h"
 #include "lyutils.h"
+#include "astree.h"
 #include "string_set.h"
 #include "cppstrtok.h"
 
@@ -130,14 +131,14 @@ int main(int argc, char ** argv) {
     fprintf (stderr, "%s: %s\n", exec::execname, strerror (errno));
   }
 
-  yyparse();
+  int parseint = yyparse();
 
+  // dump ast
+  print_ast (astFileStream, yyparse_astree, 0);
 
   // dump stringset
   strSet.dump(strFileStream); 
 
-  // dump ast
-  
   cpp_pclose();
   fclose(tokFileStream);
   fclose(strFileStream);

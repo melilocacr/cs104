@@ -45,8 +45,9 @@ struct lexer {
 
 struct parser {
    static astree* root;
-   static const char* get_tname (int symbol);
 };
+
+const char* get_tname (int symbol);
 
 int yylval_token (int symbol);
 

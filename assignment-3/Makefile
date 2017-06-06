@@ -74,13 +74,13 @@ ${DEPSFILE} :
 	${MAKE} --no-print-directory deps
 
 checksource :
-	- checksource ${CPPSRC} ${HEADSRC} 
+	- checksource ${CPPSRC} ${HEADSRC} ${FLEXSRC} ${BISONSRC}
 
 submit :
 	- mkdir -p submission
 	- rm submission/*.*
 	- cp ${SUBSRC} submission/
-	- submit cmps104a-wm.s17 late2 ${SUBSRC}
+	- submit cmps104a-wm.s17 late3 ${SUBSRC}
 
 ifeq "${NEEDINCL}" ""
 include ${DEPSFILE}
